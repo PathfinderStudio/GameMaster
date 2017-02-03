@@ -6,18 +6,39 @@ public class MouseAimCamera : MonoBehaviour {
 
     // Use this for initialization
     // speed is the rate at which the object will rotate
-    public float speed = 5.0f;
+    public float speed = 100.0f;
+	public GameObject Camera;
 
-    private Vector3 look;
+	private Vector3 lookVertical;
+	private Vector3 lookHorizontal;
 
     void FixedUpdate()
     {
-        look.x = 0; //Input.GetAxis("Mouse X");
-        look.y = Input.GetAxis("Mouse X");
+		lookHorizontal.x = 0;
+		lookHorizontal.y = Input.GetAxis ("Mouse X");
+		lookHorizontal.z = 0;
+		this.transform.Rotate (lookHorizontal, speed * Time.deltaTime);
 
-        look.z = 0;
+		lookVertical.x = Input.GetAxis("Mouse Y") * -1;
+		lookVertical.y = 0;
+		lookVertical.z = 0;
+		Camera.transform.Rotate(lookVertical, speed * Time.deltaTime);
 
-        this.transform.Rotate(look, speed);
+
+		if (lookVertical.x > 0) // look down
+		{
+			if (Camera.transform.rotation.eulerAngles.x > 70 && Camera.transform.rotation.eulerAngles.x < 180) 
+			{
+				Camera.transform.eulerAngles = new Vector3 (70, this.transform.rotation.eulerAngles.y, this.transform.rotation.eulerAngles.z);
+			} 
+		} 
+		else // look up
+		{
+			if (Camera.transform.rotation.eulerAngles.x < 290 && Camera.transform.rotation.eulerAngles.x > 180) 
+			{
+				Camera.transform.eulerAngles = new Vector3 (290, this.transform.rotation.eulerAngles.y, this.transform.rotation.eulerAngles.z);
+			}
+		}
         
     }
 }

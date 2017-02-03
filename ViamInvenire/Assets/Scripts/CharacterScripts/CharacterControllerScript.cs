@@ -28,6 +28,7 @@ public class CharacterControllerScript : MonoBehaviour
         maxVelocity = 10.0f;
         canMove = true;
         velPlayer = Vector3.zero;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
@@ -96,7 +97,7 @@ public class CharacterControllerScript : MonoBehaviour
     {
         if(col.transform.tag == "Ground")
         {
-            Debug.Log("On Ground");
+            //Debug.Log("On Ground");
             canMove = true;
         }
     }
@@ -105,7 +106,7 @@ public class CharacterControllerScript : MonoBehaviour
     {
         if(col.transform.tag == "Ground")
         {
-            Debug.Log("Not on ground");
+            //Debug.Log("Not on ground");
             canMove = false;
         }
     }
