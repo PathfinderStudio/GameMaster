@@ -13,6 +13,8 @@ public class CharacterControllerScript : MonoBehaviour
     private bool jumping;
     private float jumpAmount;
     private bool canMove;
+    private float maxVelocity;
+    private Vector3 velPlayer;
 
     // Use this for initialization
     void Start()
@@ -23,8 +25,9 @@ public class CharacterControllerScript : MonoBehaviour
         playerMovement = Vector3.zero;
         jumping = false;
         jumpAmount = 500;
-  
+        maxVelocity = 10.0f;
         canMove = true;
+        velPlayer = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -34,36 +37,47 @@ public class CharacterControllerScript : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
             {
-                _runSpeed = runSpeed * 2.0;
+                maxVelocity = 20.0f;
             }
             else if (Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightShift))
             {
-                _runSpeed = runSpeed;
+                maxVelocity = 10.0f;
             }
-
+            
             playerMovement.x = Input.GetAxis("Horizontal");
             playerMovement.z = Input.GetAxis("Vertical");
+            
+            if (playerMovement.x == 0 && playerMovement.z == 0)
+            {
+                velPlayer = player.velocity * 0.9f;
+            }
+            else
+            {
+                velPlayer = (playerMovement.z * transform.forward + playerMovement.x * transform.right) * (float)_runSpeed;
+            }
+            
             if(canMove)
             {
-                player.AddForce(playerMovement * (float)_runSpeed);  //prevent movement left to right and forward back, while off the ground, use raycast to find distance to ground?
+                player.velocity = velPlayer;  //prevent movement left to right and forward back, while off the ground, use raycast to find distance to ground?
             }
-           
-            if (player.velocity.x > 10)
+            
+            if (player.velocity.x > maxVelocity)
             {
-                player.velocity = new Vector3(10, player.velocity.y, player.velocity.z);
+                player.velocity = new Vector3(maxVelocity, player.velocity.y, player.velocity.z);
             }
-            if (player.velocity.z > 10)
+            if (player.velocity.z > maxVelocity)
             {
-                player.velocity = new Vector3(player.velocity.x, player.velocity.y, 10);
+                player.velocity = new Vector3(player.velocity.x, player.velocity.y, maxVelocity);
             }
-            if (player.velocity.x < -10)
+            if (player.velocity.x < -maxVelocity)
             {
-                player.velocity = new Vector3(-10, player.velocity.y, player.velocity.z);
+                player.velocity = new Vector3(-maxVelocity, player.velocity.y, player.velocity.z);
             }
-            if (player.velocity.z < -10)
+            if (player.velocity.z < -maxVelocity)
             {
-                player.velocity = new Vector3(player.velocity.x, player.velocity.y, -10);
+                player.velocity = new Vector3(player.velocity.x, player.velocity.y, -maxVelocity);
             }
+            
             //player.transform.Translate(playerMovement.x * (float)_runSpeed * Time.deltaTime, 0, playerMovement.z * (float)_runSpeed * Time.deltaTime);
 
             if (Input.GetKeyDown(KeyCode.Space) && !jumping)

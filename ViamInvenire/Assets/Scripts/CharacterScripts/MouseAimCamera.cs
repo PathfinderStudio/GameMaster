@@ -14,7 +14,7 @@ public class MouseAimCamera : MonoBehaviour {
     {
         look.x = 0; //Input.GetAxis("Mouse X");
         look.y = Input.GetAxis("Mouse X");
-        Debug.Log(look.y);
+
         look.z = 0;
 
         this.transform.Rotate(look, speed);
